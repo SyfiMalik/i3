@@ -22,6 +22,7 @@ bindsym $mod+Shift+Return exec flterm
 for_window [class="^.*"] border pixel 1
 gaps inner 3
 gaps outer 2
+smart_gaps on
 # Font for window titles. Will also be used by the bar unless a different font
 # is used in the bar {} block below.
 font pango:monospace 8
@@ -49,7 +50,7 @@ bindsym mod1+Return exec $term
 bindsym $mod+q kill
 
 # start dmenu (a program launcher)
-bindsym $mod+d exec dman
+bindsym $mod+d exec rofi -show run
 # There also is the (new) i3-dmenu-desktop which only displays applications
 # shipping a .desktop file. It is a wrapper around dmenu, so you need that
 # installed.
@@ -222,11 +223,11 @@ bindsym Print exec gnome-screenshot -i
 
 # File Manager
 
-bindsym XF86Explorer exec $term -e ranger
+bindsym XF86Explorer exec $term -e bash -c "ranger | lolcat"
 
 # Lock 
 
-bindsym $mod+x exec lock
+bindsym $mod+x exec $HOME/bin/lock
 
 # Browser
 
@@ -241,6 +242,9 @@ bindsym $mod+Shift+bracketright exec mpc seek +120
 # Backward in a song
 bindsym $mod+bracketleft exec mpc seek -10
 bindsym $mod+Shift+bracketleft exec mpc seek -120
+bindsym mod1+n exec mpc next
+bindsym mod1+p exec mpc prev  
+bindsym mod1+b exec mpc toggle
 
 
 # Rules
@@ -254,7 +258,7 @@ for_window [instance="dropdown"] border pixel 5
 
 # Small container in bottom left
 
-bindsym $mod+b floating toggle; sticky toggle; exec --no-startup-id bottomleft
+bindsym $mod+b floating toggle; sticky toggle; exec --no-startup-id $HOME/bin/bottomleft
 
 # Webcam
 
@@ -295,3 +299,25 @@ exec --no-startup-id $sterm -n math -f mono:pixelsize=25 -e mycalc
 bindsym $mod+u [instance="dropdown"] scratchpad show; [instance="dropdown"] move position center
 bindsym $mod+i [instance="flterm"] scratchpad show; [instance="flterm"] move position center
 bindsym mod1+m [instance="math"] scratchpad show; [instance="math"] move position center
+
+# Music
+
+for_window [instance="umusic"] floating enable
+for_window [instance="umusic"] move scratchpad
+exec --no-startup-id umusic
+bindsym $mod+m [instance="umusic"] scratchpad show; [instance="umusic"] move position center
+ 
+
+# Attan 
+
+for_window [title="Ma Me Zaoravy - mpv"] floating enable 
+for_window [title="Ma Me Zaoravy - mpv"] sticky enable 
+for_window [title="Ma Me Zaoravy - mpv"] border pixel 0 
+for_window [instance="Ma Me Zaoravy - mpv"] move position center 
+bindsym mod1+d exec $HOME/bin/dance  
+
+# Cava
+for_window [title="cava"] no_focus
+for_window [title="cava"] border pixel 0
+for_window [title="cava"] sticky enable
+
