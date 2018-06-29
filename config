@@ -19,7 +19,10 @@ set $sterm st
 bindsym $mod+Shift+Return exec flterm
 
 # i3-gaps
-for_window [class="^.*"] border pixel 1
+#for_window [class="^.*"] border pixel 1
+default_border pixel 1
+default_floating_border pixel 1
+hide_edge_borders smart
 gaps inner 3
 gaps outer 2
 smart_gaps on
@@ -91,8 +94,11 @@ bindsym $mod+slash split h
 # split in vertical orientation
 bindsym $mod+v split v
 
+# layout toggle
+bindsym $mod+t layout toggle all
+
 # enter fullscreen mode for the focused container
-bindsym $mod+f fullscreen toggle
+bindsym $mod+f fullscreen toggle global
 
 # change container layout (stacked, tabbed, toggle split)
 bindsym $mod+s layout stacking
@@ -110,6 +116,7 @@ bindsym $mod+a focus parent
 
 # focus the child container
 #bindsym $mod+d focus child
+
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -154,7 +161,11 @@ bindsym $mod+Shift+c reload
 # restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
 bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
-bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+#bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
+bindsym $mod+Shift+e exec oblogout
+
+# Workspace next
+
 bindsym $mod+semicolon workspace next
 
 # resize window (you can also use the mouse for that)
@@ -223,7 +234,7 @@ bindsym Print exec gnome-screenshot -i
 
 # File Manager
 
-bindsym XF86Explorer exec $term -e bash -c "ranger | lolcat"
+bindsym XF86Explorer exec $term -e bash -c "ranger"
 
 # Lock 
 
@@ -245,7 +256,7 @@ bindsym $mod+Shift+bracketleft exec mpc seek -120
 bindsym mod1+n exec mpc next
 bindsym mod1+p exec mpc prev  
 bindsym mod1+b exec mpc toggle
-
+for_window [title="z@freedom:~/music"] floating enable, resize set 1000 500, move absolute position center
 
 # Rules
 
@@ -254,7 +265,8 @@ for_window [title="scratchterm"] floating enable
 for_window [instance="dropdown"] floating enable
 for_window [instance="dropdown"] resize set 625 400
 for_window [instance="dropdown"] move scratchpad
-for_window [instance="dropdown"] border pixel 5
+for_window [instance="dropdown"] border pixel 2
+
 
 # Small container in bottom left
 
@@ -275,16 +287,15 @@ for_window [class="dropdown"] floating enable
 for_window [class="dropdown"] resize set 925 400
 for_window [class="dropdown"] move scratchpad
 for_window [class="dropdown"] border pixel 1
-#exec --no-startup-id xfce4-terminal --hide-borders --hide-toolbar --hide-menubar --title=dropdown --geometry=110x25+0+0 -e tmuxstart 
 #exec --no-startup-id $term -name dropdown -e tmuxstart
 #exec_always --no-startup-id "tmux send-keys -t 0:0 'clear && OS-info 2>/dev/null' Enter"
 
 
-# Floating urxvt
+# Floating xfce-terminal
 
-for_window [instance="flterm"] floating enable
-for_window [instance="flterm"] move scratchpad
-exec --no-startup-id flterm
+exec --no-startup-id xfce4-terminal --hide-borders --hide-toolbar --hide-menubar --geometry=110x25+0+0 & 
+for_window [instance="xfce4-terminal"] floating enable, border pixel 1
+for_window [instance="xfce4-terminal"] move scratchpad
 
 for_window [instance="math"] floating enable
 for_window [instance="math"] resize set 800 300
@@ -297,7 +308,7 @@ exec --no-startup-id $sterm -n math -f mono:pixelsize=25 -e mycalc
 # and finally I'll bind tmux stuff with mod + u
 
 bindsym $mod+u [instance="dropdown"] scratchpad show; [instance="dropdown"] move position center
-bindsym $mod+i [instance="flterm"] scratchpad show; [instance="flterm"] move position center
+bindsym $mod+i [instance="xfce4-terminal"] scratchpad show; [instance="xfce4-terminal"] move position center
 bindsym mod1+m [instance="math"] scratchpad show; [instance="math"] move position center
 
 # Music
@@ -317,7 +328,66 @@ for_window [instance="Ma Me Zaoravy - mpv"] move position center
 bindsym mod1+d exec $HOME/bin/dance  
 
 # Cava
-for_window [title="cava"] no_focus
-for_window [title="cava"] border pixel 0
-for_window [title="cava"] sticky enable
+#exec --no-startup-id ucava
+#for_window [title="ucava"] no_focus
+#for_window [title="ucava"] border pixel 0
+#for_window [title="ucava"] sticky enable
+#for_window [title="ucava"] resize 1682x90
+#for_window [title="ucava"] move -53+820 
+#for_window [title="ucava"]  floating enable
+
+# Oblogout
+for_window [class="Oblogout"] floating enable
+for_window [class="Oblogout"] border pixel 0
+#for_window [class="Oblogout"]
+#for_window [class="Oblogout"]
+
+# Take a screenshot for a selected area
+
+bindsym --release mod1+a exec --no-startup-id import /tmp/screenshot.png
+
+# Mouse keys 
+
+bindsym --whole-window $mod+button2 kill
+bindsym --whole-window button3 floating toggle
+bindsym --whole-window $mod+button3 floating toggle
+bindsym --whole-window button9 move left
+bindsym --whole-window button8 move right
+
+# Floating windows size
+
+#floating_maximum_size 75x50
+#floating_minimum_size 75x50
+
+# Workspace orientation
+
+default_orientation auto
+workspace_layout default
+
+# Putting clients on specific workspaces
+
+assign [class="qutebrowser"] → number 2
+
+# Popups in fullscreen
+
+popup_during_fullscreen smart
+
+# Auto back-and-forth switching between workspaces
+
+workspace_auto_back_and_forth yes
+
+# Switch between the current and the previously focused one
+
+bindsym $mod+g workspace back_and_forth
+
+# Focus on windows activation
+
+focus_on_window_activation smart
+
+# Show the next scratchpad window or hide the focused scratchpad window.
+# If there are multiple scratchpad windows, this command cycles through them.
+
+bindsym $mod+minus scratchpad show
+
+
 
